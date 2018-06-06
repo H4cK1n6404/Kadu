@@ -1,25 +1,30 @@
-dist: trusty
+dist: xenial
 language: cpp
 before_install:
-  - sudo add-apt-repository --yes ppa:beineri/opt-qt551-trusty
   - sudo apt-get update -qq
-  - sudo apt-get install -y qt55[QTPACKAGE] libgadu3 libgadu-dev cmake
+  - sudo apt-get install -y cmake xvfb
+  - sudo apt-get install -y libgadu3 libgadu-dev
+  - sudo apt-get install -y libarchive-dev libotr5-dev libmessaging-menu-dev libqxmpp-dev libmpdclient-dev libenchant-dev libxss-dev libboost-all-dev
+  - sudo apt-get install -y qtbase5-dev qttools5-dev-tools qtdeclarative5-dev libqt5webkit5-dev libqt5x11extras5-dev libqt5xmlpatterns5-dev qtscript5-dev qtmultimedia5-dev
+
 before_script:
-  - source /opt/qt55/bin/qt55-env.sh
   - git clone https://github.com/vogel/injeqt.git
   - cd injeqt
   - mkdir build
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/usr ..
-  - make
+  - make -j4
   - make test
   - sudo make install
   - cd ..
   - cd ..
 script:
-  - source /opt/qt55/bin/qt55-env.sh
+  - sed -i 's/unity_integration/#unity_integration/' Plugins.cmake
+  - Xvfb :1 &
+  - export DISPLAY=:1
   - mkdir build
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=Debug ..
-  - make
+  - make -j4
   - make test
+
