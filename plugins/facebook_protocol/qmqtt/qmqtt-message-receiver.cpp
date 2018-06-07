@@ -54,7 +54,7 @@ std::experimental::optional<QMqttMessage> QMqttMessageReceiver::readMessage()
     if (m_header->size > MAX_MESSAGE_SIZE)
         throw QMqttMessageSizeExceededException{};
 
-    if (m_buffer.size() < m_header->size + m_header->offset)
+    if (static_cast<uint64_t>(m_buffer.size()) < m_header->size + m_header->offset)
         return {};
 
     auto content = m_buffer.mid(m_header->offset, m_header->size);

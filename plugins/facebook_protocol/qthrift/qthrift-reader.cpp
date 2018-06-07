@@ -214,7 +214,7 @@ QByteArray Reader::readString()
     if (size > 1 << 20)
         throw SizeOutOfRangeException{};
 
-    if (m_pos + size > m_data.size() + 1)
+    if (m_pos + size > static_cast<uint64_t>(m_data.size()) + 1)
         throw ReadOutOfRangeException{};
 
     auto result = m_data.mid(m_pos, size);
